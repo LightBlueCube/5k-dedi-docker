@@ -1,4 +1,4 @@
-# SCP-5k Dedicated Server For Docker
+# SCP-5K Dedicated Server For Docker
 
 ### Usage
 
@@ -6,7 +6,13 @@
 
 #### Step 1
 
-[Pull docker image](https://github.com/LightBlueCube/5k-dedi-docker/pkgs/container/5k-dedi-docker%2F5k-dedi)
+Pull docker image
+
+```bash
+docker pull ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi:latest
+```
+
+Add `sudo` before the command if you arent root user
 
 #### Step 2
 
@@ -28,9 +34,9 @@ Enter command to start your server
 docker run --name <any_name> -p <port>:<port> -v <the_volume_you_just_created>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
 
-Add `-d` if you want it running on background
-
 Add `sudo` before the command if you arent root user
+
+Add `-d` if you want it running on background
 
 ### 使用方法
 
@@ -38,7 +44,13 @@ Add `sudo` before the command if you arent root user
 
 #### Step 1
 
-[拉取镜像](https://github.com/LightBlueCube/5k-dedi-docker/pkgs/container/5k-dedi-docker%2F5k-dedi)
+拉取镜像
+
+```bash
+docker pull ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi:latest
+```
+
+如果你不是以root用户运行，在命令前加 `sudo`
 
 #### Step 2
 
@@ -60,6 +72,6 @@ docker volume create <任何名字>
 docker run --name <任何名字> -p <端口>:<端口> -v <你刚创建的volume名>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
 
-如果你希望运行在后台，加 `-d`
-
 如果你不是以root用户运行，在命令前加 `sudo`
+
+如果你希望运行在后台，加 `-d`
