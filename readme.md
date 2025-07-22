@@ -31,7 +31,13 @@ You can access your server files later at `/var/lib/docker/volumes/<volume_name>
 Enter command to start your server
 
 ```bash
-docker run --name <any_name> -p <port>:<port> -v <the_volume_you_just_created>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name <any_name> -p <port>:<port>/<tcp or udp> <add muiltple -p arg for forwarding more ports> -v <the_volume_you_just_created>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+```
+
+example:
+
+```bash
+docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
 
 Add `sudo` before the command if you arent root user
@@ -69,7 +75,13 @@ docker volume create <任何名字>
 使用这个指令启动你的服务器
 
 ```bash
-docker run --name <任何名字> -p <端口>:<端口> -v <你刚创建的volume名>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name <任何名字> -p <端口>:<端口>/<tcp或udp> <增加多个-p参数以转发更多端口> -v <你刚创建的volume名>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+```
+
+示例:
+
+```bash
+docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
 
 如果你不是以root用户运行，在命令前加 `sudo`
