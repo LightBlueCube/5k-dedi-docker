@@ -12,17 +12,15 @@ Pull docker image
 docker pull ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi:latest
 ```
 
-Add `sudo` before the command if you arent root user
-
 #### Step 2
 
 Create a volume for storage your server files
 
 ```bash
-docker volume create <any_name>
+docker volume create <1>
 ```
 
-Add `sudo` before the command if you arent root user
+**1**: Any name for volume
 
 You can access your server files later at `/var/lib/docker/volumes/<volume_name>/_data/`
 
@@ -31,16 +29,26 @@ You can access your server files later at `/var/lib/docker/volumes/<volume_name>
 Enter command to start your server
 
 ```bash
-docker run --name <any_name> -p <port>:<port>/<tcp or udp> <add muiltple -p arg for forwarding more ports> -v <the_volume_you_just_created>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name <1> -p <2>:<2>/<3> <4> -e ARGS="<5>" -v <6>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
 
-example:
+**1**: Any name for container
+
+**2**: Port number
+
+**3**: Type `tcp` or `udp`
+
+**4**: Add muiltple `-p <2>:<2>/<3>` for forwarding muiltple ports
+
+**5**: Params you want send to server, leave empty if you dont wanna send any params
+
+**6**: The volume name you just created
+
+Example:
 
 ```bash
-docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -e ARGS="M_Sewer_CanalPVP -maprotation=M_Sewer_CanalPVP" -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
-
-Add `sudo` before the command if you arent root user
 
 Add `-d` if you want it running on background
 
@@ -56,17 +64,15 @@ Add `-d` if you want it running on background
 docker pull ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi:latest
 ```
 
-如果你不是以root用户运行，在命令前加 `sudo`
-
 #### Step 2
 
 创建一个volume用于存储你的服务器文件
 
 ```bash
-docker volume create <任何名字>
+docker volume create <1>
 ```
 
-如果你不是以root用户运行，在命令前加 `sudo`
+**1**: 为你的volume取一个名字
 
 你可以稍后在 `/var/lib/docker/volumes/<volume_name>/_data/` 访问你的服务器文件
 
@@ -75,15 +81,25 @@ docker volume create <任何名字>
 使用这个指令启动你的服务器
 
 ```bash
-docker run --name <任何名字> -p <端口>:<端口>/<tcp或udp> <增加多个-p参数以转发更多端口> -v <你刚创建的volume名>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name <1> -p <2>:<2>/<3> <4> -e ARGS="<5>" -v <6>:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
+
+**1**: 为你的container取一个名字
+
+**2**: 端口号
+
+**3**: 填`tcp`或`udp`
+
+**4**: 增加多个`-p <2>:<2>/<3>`来转发更多端口
+
+**5**: 传递给服务器的参数，如果你不想传递任何参数，留空
+
+**6**: 你刚刚创建的volume名
 
 示例:
 
 ```bash
-docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
+docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/tcp -p 27015:27015/udp -e ARGS="M_Sewer_CanalPVP -maprotation=M_Sewer_CanalPVP" -v 5k_volume:"/home/5k/Steam/steamapps/common/SCP Pandemic Dedicated Server" ghcr.io/lightbluecube/5k-dedi-docker/5k-dedi
 ```
-
-如果你不是以root用户运行，在命令前加 `sudo`
 
 如果你希望运行在后台，加 `-d`
