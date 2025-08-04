@@ -1,0 +1,17 @@
+FROM debian
+
+RUN apt-get update && apt-get install -y lib32gcc-s1 curl wine && rm -rf /var/lib/apt/lists/* && \
+	useradd -m -s /bin/bash 5k
+
+ENV APPID=884110
+ENV STEAMPATH="/home/5k/Steam"
+ENV SRVPATH="${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"
+ENV STARTCMD="wine ./WindowsServer/PandemicServer.exe"
+ENV ARGS=""
+
+USER 5k
+RUN mkdir -p "${STEAMPATH}" "${SRVPATH}" && cd "${STEAMPATH}" && \
+	curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
+
+CMD "${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +@sSteamCmdForcePlatformType windows +login anonymous +app_update ${APPID} +'quit' && \
+	cd "${SRVPATH}" && ${STARTCMD} ${ARGS}

@@ -17,29 +17,42 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Generate tags
         run: |
           repo=${{ github.repository }};
-          echo "CURR_TAG=ghcr.io/${repo,,}/5k-dedi:${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "LATEST_TAG=ghcr.io/${repo,,}/5k-dedi:latest" >> $GITHUB_ENV
+          echo "NATIVE_CURR_TAG=ghcr.io/${repo,,}/5k-dedi:${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "NATIVE_LATEST_TAG=ghcr.io/${repo,,}/5k-dedi:latest" >> $GITHUB_ENV
+          echo "WINE_CURR_TAG=ghcr.io/${repo,,}/5k-dedi-wine:${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "WINE_LATEST_TAG=ghcr.io/${repo,,}/5k-dedi-wine:latest" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v2
+      - name: "Build Docker image: Native"
+        uses: docker/build-push-action@v6
         with:
           context: .
+          file: dockerfile.native
           push: true
           tags: |
-            ${{ env.CURR_TAG }}
-            ${{ env.LATEST_TAG }}
+            ${{ env.NATIVE_CURR_TAG }}
+            ${{ env.NATIVE_LATEST_TAG }}
+
+      - name: "Build Docker image: Wine"
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfile.wine
+          push: true
+          tags: |
+            ${{ env.WINE_CURR_TAG }}
+            ${{ env.WINE_LATEST_TAG }}
