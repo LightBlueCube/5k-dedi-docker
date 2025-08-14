@@ -14,5 +14,5 @@ RUN mkdir -p "${STEAMPATH}" "${SRVPATH}" && cd "${STEAMPATH}" && \
 
 USER root
 CMD chown -R 5k:5k "${SRVPATH}" && su 5k -c' \
-	"${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +login anonymous +app_update ${APPID} +quit && \
+	"${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +force_install_dir ${SRVPATH} +login anonymous +app_update ${APPID} +quit && \
 	cd "${SRVPATH}" && ./LinuxServer/PandemicServer.sh ${ARGS}'
