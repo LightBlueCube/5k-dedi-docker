@@ -12,5 +12,7 @@ USER 5k
 RUN mkdir -p "${STEAMPATH}" "${SRVPATH}" && cd "${STEAMPATH}" && \
 	curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
-CMD "${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +login anonymous +app_update ${APPID} +'quit' && \
-	cd "${SRVPATH}" && ./LinuxServer/PandemicServer.sh ${ARGS}
+USER root
+CMD chown -R 5k:5k "${SRVPATH}" && su 5k -c' \
+	"${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +login anonymous +app_update ${APPID} +quit && \
+	cd "${SRVPATH}" && ./LinuxServer/PandemicServer.sh ${ARGS}'

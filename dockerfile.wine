@@ -17,12 +17,12 @@ RUN dpkg --add-architecture i386 && \
 	mkdir -pm755 /etc/apt/keyrings && \
 	curl -so /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
 	curl -so /etc/apt/sources.list.d/winehq-trixie.sources https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources && \
-	apt-get update && apt-get install -y --install-recommends winehq-staging && \
+	apt-get update && apt-get install -y --install-recommends winehq-staging xvfb && \
 	rm -rf /var/lib/apt/lists/* && apt-get clean
 
 ENV STARTENV="WINEDLLOVERRIDES=dwmapi=native,builtin"
-ENV STARTCMD="wine ./WindowsServer/PandemicServer.exe"
+ENV STARTCMD="xvfb-run wine ./WindowsServer/PandemicServer.exe"
 
-USER 5k
-CMD "${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +@sSteamCmdForcePlatformType windows +login anonymous +app_update ${APPID} +'quit' && \
-	cd "${SRVPATH}" && if [ -n "${STARTENV}" ]; then export ${STARTENV} && ${STARTCMD} ${ARGS}; else ${STARTCMD} ${ARGS}; fi
+CMD chown -R 5k:5k "${SRVPATH}" && su 5k -c' \
+	"${STEAMPATH}/steamcmd.sh" @ShutdownOnFailedCommand @NoPromptForPassword +@sSteamCmdForcePlatformType windows +login anonymous +app_update ${APPID} +quit && \
+	cd "${SRVPATH}" && if [ -n "${STARTENV}" ]; then export ${STARTENV} && ${STARTCMD} ${ARGS}; else ${STARTCMD} ${ARGS}; fi'
