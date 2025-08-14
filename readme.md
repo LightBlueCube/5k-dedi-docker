@@ -2,8 +2,6 @@
 
 ## Usage
 
-> The text under "<>" meanning you have to replace it by youself according to your needs, and delete "<>"
-
 We currently have two different implementations, you need to choose one according you needs
 
 **Native**: A simple setup by using native linux server, choose this if you have no idea about which option to pick
@@ -12,11 +10,13 @@ We currently have two different implementations, you need to choose one accordin
 
 [For people who just want quickly host a server](#quick-start)
 
-[For people who want know more about this](#advanced)
+[For people who not a newbie to docker and linux](#advanced)
 
 [让我们说中文 | For people who not a english speaker](#使用方法)
 
 ## Quick Start
+
+> The text under "<>" meanning you have to replace it by youself according to your needs, and delete "<>"
 
 ### Step 1
 
@@ -100,8 +100,6 @@ You have to create a volume for stoagre your server files, mount it on `${SRVPAT
 
 ### 使用方法
 
-> "<>"内的文字需要你根据你的需求自行替换，并删掉"<>"
-
 我们目前有两种不同的实现，根据你的需求选择一个
 
 **Native**: 一个跑原生linux服务器的简单实现，如果你不知道选哪个，选这个
@@ -110,10 +108,12 @@ You have to create a volume for stoagre your server files, mount it on `${SRVPAT
 
 [对于那些只是想快速搭建一个服务器的人](#快速开始)
 
-[对于那些想要了解更多的人](#高级)
+[对于那些对Docker和Linux不是新手的人](#高级)
 
 
 ## 快速开始
+
+> "<>"内的文字需要你根据你的需求自行替换，并删掉"<>"
 
 ### Step 1
 
