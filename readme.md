@@ -12,7 +12,7 @@ We currently have two different implementations, you need to choose one accordin
 
 [For people who not a newbie to docker and linux](#advanced)
 
-[让我们说中文 | For people who not a english speaker](#使用方法)
+[让我们说中文](#使用方法)
 
 ## Quick Start
 
@@ -87,14 +87,14 @@ Add `-d` if you want it running on background
 
 You have to create a volume for stoagre your server files, mount it on `${SRVPATH}` (see ENVs on below)
 
-| ENVs      	| Native 	| Wine 	| Default Value                                                 	| Description                                                                                                                   	|
-|-----------	|--------	|------	|---------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------	|
-| APPID     	| YES    	| YES  	| 884110                                                        	| Game server's steam appid                                                                                                     	|
-| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| Steamcmd path                                                                                                                 	|
-| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| Game server path                                                                                                              	|
-| ARGS      	| YES    	| YES  	| ""                                                            	| The params you want sent to the server                                                                                        	|
-| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| Start environments, if you want running vanilla server but failed to starting, try clean it (**may cause `UE4SS` not loading**) 	|
-| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| Start command, used for start server, you can change it according you needs.<br/>For example: `"wine ./StartServer.bat"`      	|
+| ENVs      	| Native 	| Wine 	| Default Value                                                 	| Description                                                                           	|
+|-----------	|--------	|------	|---------------------------------------------------------------	|---------------------------------------------------------------------------------------	|
+| APPID     	| YES    	| YES  	| 884110                                                        	| Game server's steam appid                                                             	|
+| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| Steamcmd path                                                                         	|
+| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| Game server path                                                                      	|
+| ARGS      	| YES    	| YES  	| ""                                                            	| The params you want sent to the server                                                	|
+| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| Start environments, **modify may result in `UE4SS` not loading**                      	|
+| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
 
 ----
 
@@ -102,9 +102,9 @@ You have to create a volume for stoagre your server files, mount it on `${SRVPAT
 
 我们目前有两种不同的实现，根据你的需求选择一个
 
-**Native**: 一个跑原生linux服务器的简单实现，如果你不知道选哪个，选这个
+**Native**: 一个跑原生linux服务端的简单实现，如果你不知道选哪个，选这个
 
-**Wine**: 使用wine来跑windows的服务器，为那些想要使用`UE4SS`的人制作
+**Wine**: 使用wine来跑windows服务端，为那些想要使用`UE4SS`的人制作
 
 [对于那些只是想快速搭建一个服务器的人](#快速开始)
 
@@ -184,11 +184,11 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 
 你需要创建一个volume存储你的服务器文件，并挂载在`${SRVPATH}`(参阅下方ENVs)
 
-| ENVs      	| Native 	| Wine 	| 默认值                                                         	| 描述                                                                           	|
-|-----------	|--------	|------	|---------------------------------------------------------------	|-------------------------------------------------------------------------------	|
-| APPID     	| YES    	| YES  	| 884110                                                        	| 游戏服务器的steam appid                                                         	|
-| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| steamcmd的路径                                                                 	|
-| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| 游戏服务器的路径                                                                 	|
-| ARGS      	| YES    	| YES  	| ""                                                            	| 你想发给服务器的参数                                                              	|
-| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| 环境变量，如果你想开原版服务器并在启动时遇到问题，尝试覆写为空（**可能会导致`UE4SS`不工作**） 	|
-| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| 用于开启服务器的指令，你可以根据你的需要更改<br/>举例： `"wine ./StartServer.bat"`     	|
+| ENVs      	| Native 	| Wine 	| 默认值                                                         	| 描述                                               	|
+|-----------	|--------	|------	|---------------------------------------------------------------	|---------------------------------------------------	|
+| APPID     	| YES    	| YES  	| 884110                                                        	| 游戏服务器的steam appid                             	|
+| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| steamcmd的路径                                     	|
+| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| 游戏服务器的路径                                     	|
+| ARGS      	| YES    	| YES  	| ""                                                            	| 你想发给服务器的参数                                  	|
+| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| 环境变量，**修改可能会导致`UE4SS`不加载**              	|
+| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"` 	|
