@@ -87,14 +87,52 @@ Add `-d` if you want it running on background
 
 You have to create a volume for stoagre your server files, mount it on `${SRVPATH}` (see ENVs on below)
 
-| ENVs      	| Native 	| Wine 	| Default Value                                                 	| Description                                                                           	|
-|-----------	|--------	|------	|---------------------------------------------------------------	|---------------------------------------------------------------------------------------	|
-| APPID     	| YES    	| YES  	| 884110                                                        	| Game server's steam appid                                                             	|
-| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| Steamcmd path                                                                         	|
-| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| Game server path                                                                      	|
-| ARGS      	| YES    	| YES  	| ""                                                            	| The params you want sent to the server                                                	|
-| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| Start environments, **modify may result in `UE4SS` not loading**                      	|
-| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
+### ENVs
+
+| ENVs            	| Default Value                                                                                     	| Description                                                                           	|
+|-----------------	|---------------------------------------------------------------------------------------------------	|---------------------------------------------------------------------------------------	|
+| APPID           	| `884110`                                                                                          	| Game server's steam appid                                                             	|
+| STEAMPATH       	| `"/home/5k/Steam"`                                                                                	| Steamcmd path                                                                         	|
+| SRVPATH         	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| Game server path                                                                      	|
+| ARGS            	| `""`                                                                                              	| The params you want sent to the server                                                	|
+| STARTENV        	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| Start environments, **modify `WINEDLLOVERRIDES` may result in `UE4SS` not loading**   	|
+| STARTCMD        	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
+| ENTRYPOINT_ARGS 	| Native: `"native skip"`<br/>Wine: `"wine skip"`                                                   	| Params for entrypoint.sh, see Entrypoint Params on below                              	|
+
+### Entrypoint Params
+
+| Params 	| Allowed value            	| Description                                                                             	|
+|--------	|--------------------------	|-----------------------------------------------------------------------------------------	|
+| $1     	| `native`, `wine`, `skip` 	| Used to set steamcmd's platform type, `skip` to skip the steamcmd                       	|
+| $2     	| `skip`, undefined        	| Used to should start Log Checker, `skip` to skip Log Checker, otherwise leave undefined 	|
+
+Example:
+
+```sh
+-e ENTRYPOINT_ARGS="native"
+```
+
+Use linux platform, start log checker
+
+```sh
+-e ENTRYPOINT_ARGS="wine skip"
+```
+
+Use windows platform, skip log checker
+
+```sh
+-e ENTRYPOINT_ARGS="skip skip"
+```
+
+Skip steamcmd, skip log checker
+
+### Log Checker
+
+A simple script will keep watching the stdout, and if it find any matched strings, it will kill the server
+
+Default matched strings: `FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `Error: SteamSockets API`
+
+You can modify it in `entrypoint.sh` > `$MATCH_TARGET`
 
 ----
 
@@ -184,11 +222,49 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 
 你需要创建一个volume存储你的服务器文件，并挂载在`${SRVPATH}`(参阅下方ENVs)
 
-| ENVs      	| Native 	| Wine 	| 默认值                                                         	| 描述                                               	|
-|-----------	|--------	|------	|---------------------------------------------------------------	|---------------------------------------------------	|
-| APPID     	| YES    	| YES  	| 884110                                                        	| 游戏服务器的steam appid                             	|
-| STEAMPATH 	| YES    	| YES  	| "/home/5k/Steam"                                              	| steamcmd的路径                                     	|
-| SRVPATH   	| YES    	| YES  	| "${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server" 	| 游戏服务器的路径                                     	|
-| ARGS      	| YES    	| YES  	| ""                                                            	| 你想发给服务器的参数                                  	|
-| STARTENV  	| NO     	| YES  	| "WINEDLLOVERRIDES=dwmapi=native,builtin"                      	| 环境变量，**修改可能会导致`UE4SS`不加载**              	|
-| STARTCMD  	| NO     	| YES  	| "wine ./WindowsServer/PandemicServer.exe"                     	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"` 	|
+### ENVs
+
+| ENVs            	| 默认值                                                                                             	| 描述                                                    	|
+|-----------------	|---------------------------------------------------------------------------------------------------	|--------------------------------------------------------	|
+| APPID           	| `884110`                                                                                          	| 游戏服务器的steam appid                                  	|
+| STEAMPATH       	| `"/home/5k/Steam"`                                                                                	| steamcmd的路径                                          	|
+| SRVPATH         	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| 游戏服务器的路径                                          	|
+| ARGS            	| `""`                                                                                              	| 你想发给服务器的参数                                       	|
+| STARTENV        	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| 环境变量，**修改`WINEDLLOVERRIDES`可能会导致`UE4SS`不加载** 	|
+| STARTCMD        	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"`   	|
+| ENTRYPOINT_ARGS 	| Native: `"native skip"`<br/>Wine: `"wine skip"`                                                   	| entrypoint.sh的参数，详见下方Entrypoint Params            	|
+
+### Entrypoint Params
+
+| Params 	| 合法值                    	| 描述                                                                 	|
+|--------	|--------------------------	|---------------------------------------------------------------------	|
+| $1     	| `native`, `wine`, `skip` 	| 用于设置steamcmd的平台类型，`skip`为跳过steamcmd                         	|
+| $2     	| `skip`, undefined        	| 用于启动Log Checker，`skip`为跳过Log Checker, 否则请保持未定义(undefined) 	|
+
+示例:
+
+```sh
+-e ENTRYPOINT_ARGS="native"
+```
+
+使用linux平台，启动Log Checker
+
+```sh
+-e ENTRYPOINT_ARGS="wine skip"
+```
+
+使用windows平台，跳过Log Checker
+
+```sh
+-e ENTRYPOINT_ARGS="skip skip"
+```
+
+跳过steamcmd，跳过Log Checker
+
+### Log Checker
+
+一个简单的脚本，会持续监听标准输出(stdout)，如果发现匹配的字符串，就会杀掉服务器
+
+默认匹配字符串：`FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `Error: SteamSockets API`
+
+你可以在`entrypoint.sh` > `$MATCH_TARGET`修改
