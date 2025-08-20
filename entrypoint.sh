@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+# SteamCMD
+
 if [ -z "${1-}" ]; then
 	echo "entrypoint.sh: require arguments \$1."
 	exit 1
@@ -15,21 +17,50 @@ else
 	exit 1
 fi
 
+# Setup environments
+
 cd "$SRVPATH"
 
 if [ -n "$STARTENV" ]; then
 	export $STARTENV
 fi
 
-if [ -n "${2-}" ]; then
-	if [ "${2-}" != "skip" ]; then
-		echo "entrypoint.sh: invalid arguments \$2, leave undefined or use \"skip\"."
-		exit 1
-	fi
+# UE4SS Log Clipper
 
+if [ -z "${2-}" ]; then
+	echo "entrypoint.sh: require arguments \$2."
+	exit 1
+fi
+
+if [ "$2" != "yes" ] && [ "$2" != "no" ]; then
+	echo "entrypoint.sh: invalid arguments \$2, use \"yes\" or \"no\"."
+	exit 1
+fi
+
+if [ "$2" = "yes" ]; then
+	echo "entrypoint.sh: clipping UE4SS.log!"
+	mkdir -p "$UE4SS_LOG_TO_PATH"
+	cp "$UE4SS_LOG_SRC_PATH/UE4SS.log" "$UE4SS_LOG_TO_PATH/$(date +"%Y%m%dT%H%M%S%z").log"
+fi
+
+# Log Checker
+
+if [ -z "${3-}" ]; then
+	echo "entrypoint.sh: require arguments \$3."
+	exit 1
+fi
+
+
+if [ "$3" != "yes" ] && [ "$3" != "no" ]; then
+	echo "entrypoint.sh: invalid arguments \$3, use \"yes\" or \"no\"."
+	exit 1
+fi
+
+if [ "$3" = "no" ]; then
 	$STARTCMD $ARGS
 	exit
 fi
+
 
 echo "entrypoint.sh: activate log checker!"
 

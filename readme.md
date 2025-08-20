@@ -85,46 +85,55 @@ Add `-d` if you want it running on background
 
 ## Advanced
 
-You have to create a volume for stoagre your server files, mount it on `${SRVPATH}` (see ENVs on below)
+You have to create a volume for stoagre your server files, mount it on `$SRVPATH` (see [ENVs](#envs))
 
 ### ENVs
 
-| ENVs            	| Default Value                                                                                     	| Description                                                                           	|
-|-----------------	|---------------------------------------------------------------------------------------------------	|---------------------------------------------------------------------------------------	|
-| APPID           	| `884110`                                                                                          	| Game server's steam appid                                                             	|
-| STEAMPATH       	| `"/home/5k/Steam"`                                                                                	| Steamcmd path                                                                         	|
-| SRVPATH         	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| Game server path                                                                      	|
-| ARGS            	| `""`                                                                                              	| The params you want sent to the server                                                	|
-| STARTENV        	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| Start environments, **modify `WINEDLLOVERRIDES` may result in `UE4SS` not loading**   	|
-| STARTCMD        	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
-| ENTRYPOINT_ARGS 	| Native: `"native skip"`<br/>Wine: `"wine skip"`                                                   	| Params for entrypoint.sh, see Entrypoint Params on below                              	|
+| ENVs               	| Default Value                                                                                     	| Description                                                                           	|
+|--------------------	|---------------------------------------------------------------------------------------------------	|---------------------------------------------------------------------------------------	|
+| APPID              	| `884110`                                                                                          	| Game server's steam appid                                                             	|
+| STEAMPATH          	| `"/home/5k/Steam"`                                                                                	| Steamcmd path                                                                         	|
+| SRVPATH            	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| Game server path                                                                      	|
+| ARGS               	| `""`                                                                                              	| The params you want sent to the server                                                	|
+| STARTENV           	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| Start environments, **modify `WINEDLLOVERRIDES` may result in `UE4SS` not loading**   	|
+| STARTCMD           	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
+| ENTRYPOINT_ARGS    	| Native: `"native no no"`<br/>Wine: `"wine no no"`                                                 	| Params for entrypoint.sh, see [Entrypoint Params](#entrypoint-params)                 	|
+| UE4SS_LOG_SRC_PATH 	| Native: undefined<br/>Wine: `"${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"`            	| Used by [UE4SS Log Clipper](#ue4ss-log-clipper)                                       	|
+| UE4SS_LOG_TO_PATH  	| Native: undefined<br/>Wine: `"${UE4SS_LOG_SRC_PATH}/logs"`                                        	| Used by [UE4SS Log Clipper](#ue4ss-log-clipper)                                       	|
 
 ### Entrypoint Params
 
-| Params 	| Allowed value            	| Description                                                                             	|
-|--------	|--------------------------	|-----------------------------------------------------------------------------------------	|
-| $1     	| `native`, `wine`, `skip` 	| Used to set steamcmd's platform type, `skip` to skip the steamcmd                       	|
-| $2     	| `skip`, undefined        	| Used to should start Log Checker, `skip` to skip Log Checker, otherwise leave undefined 	|
+| Params 	| Allowed value            	| Description                                                                   	|
+|--------	|--------------------------	|-------------------------------------------------------------------------------	|
+| $1     	| `native`, `wine`, `skip` 	| Used to set steamcmd's platform type, `skip` to skip the steamcmd             	|
+| $2     	| `yes`, `no`              	| Used to should start [UE4SS Log Clipper](#ue4ss-log-clipper), **Wine ONLY**   	|
+| $3     	| `yes`, `no`              	| Used to should start [Log Checker](#log-checker)                              	|
 
 Example:
 
 ```sh
--e ENTRYPOINT_ARGS="native"
+-e ENTRYPOINT_ARGS="native no yes"
 ```
 
-Use linux platform, start log checker
+Use linux platform, not start UE4SS Log Clipper, start Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="wine skip"
+-e ENTRYPOINT_ARGS="wine yes no"
 ```
 
-Use windows platform, skip log checker
+Use windows platform, start UE4SS Log Clipper, not start Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="skip skip"
+-e ENTRYPOINT_ARGS="skip no no"
 ```
 
-Skip steamcmd, skip log checker
+Skip steamcmd, not start UE4SS Log Clipper, not start Log Checker
+
+### UE4SS Log Clipper
+
+A simple script will clip `$UE4SS_LOG_SRC_PATH/UE4SS.log` to `$UE4SS_LOG_TO_PATH` everytime before server start running
+
+The name format of the log: `$(date +"%Y%m%dT%H%M%S%z").log`
 
 ### Log Checker
 
@@ -220,46 +229,55 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 
 ## 高级
 
-你需要创建一个volume存储你的服务器文件，并挂载在`${SRVPATH}`(参阅下方ENVs)
+你需要创建一个volume存储你的服务器文件，并挂载在`$SRVPATH`(参阅[ENVs](#envs-1))
 
 ### ENVs
 
-| ENVs            	| 默认值                                                                                             	| 描述                                                    	|
-|-----------------	|---------------------------------------------------------------------------------------------------	|--------------------------------------------------------	|
-| APPID           	| `884110`                                                                                          	| 游戏服务器的steam appid                                  	|
-| STEAMPATH       	| `"/home/5k/Steam"`                                                                                	| steamcmd的路径                                          	|
-| SRVPATH         	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| 游戏服务器的路径                                          	|
-| ARGS            	| `""`                                                                                              	| 你想发给服务器的参数                                       	|
-| STARTENV        	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| 环境变量，**修改`WINEDLLOVERRIDES`可能会导致`UE4SS`不加载** 	|
-| STARTCMD        	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"`   	|
-| ENTRYPOINT_ARGS 	| Native: `"native skip"`<br/>Wine: `"wine skip"`                                                   	| entrypoint.sh的参数，详见下方Entrypoint Params            	|
+| ENVs               	| 默认值                                                                                             	| 描述                                                              	|
+|--------------------	|---------------------------------------------------------------------------------------------------	|------------------------------------------------------------------	|
+| APPID              	| `884110`                                                                                          	| 游戏服务器的steam appid                                            	|
+| STEAMPATH          	| `"/home/5k/Steam"`                                                                                	| steamcmd的路径                                                    	|
+| SRVPATH            	| `"${STEAMPATH}/steamapps/common/SCP Pandemic Dedicated Server"`                                   	| 游戏服务器的路径                                                    	|
+| ARGS               	| `""`                                                                                              	| 你想发给服务器的参数                                                	|
+| STARTENV           	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| 环境变量，**修改`WINEDLLOVERRIDES`可能会导致`UE4SS`不加载**           	|
+| STARTCMD           	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"`             	|
+| ENTRYPOINT_ARGS    	| Native: `"native no no"`<br/>Wine: `"wine no no"`                                                 	| entrypoint.sh的参数，详见[Entrypoint Params](#entrypoint-params-1) 	|
+| UE4SS_LOG_SRC_PATH 	| Native: undefined<br/>Wine: `"${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"`            	| 被用于 [UE4SS Log Clipper](#ue4ss-log-clipper-1)                  	|
+| UE4SS_LOG_TO_PATH  	| Native: undefined<br/>Wine: `"${UE4SS_LOG_SRC_PATH}/logs"`                                        	| 被用于 [UE4SS Log Clipper](#ue4ss-log-clipper-1)                  	|
 
 ### Entrypoint Params
 
-| Params 	| 合法值                    	| 描述                                                                 	|
-|--------	|--------------------------	|---------------------------------------------------------------------	|
-| $1     	| `native`, `wine`, `skip` 	| 用于设置steamcmd的平台类型，`skip`为跳过steamcmd                         	|
-| $2     	| `skip`, undefined        	| 用于启动Log Checker，`skip`为跳过Log Checker, 否则请保持未定义(undefined) 	|
+| Params 	| 合法值                    	| 描述                                                              	|
+|--------	|--------------------------	|------------------------------------------------------------------	|
+| $1     	| `native`, `wine`, `skip` 	| 用于设置steamcmd的平台类型，`skip`为跳过steamcmd                     	|
+| $2     	| `yes`, `no`              	| 用于是否启用[UE4SS Log Clipper](#ue4ss-log-clipper-1)，**仅限Wine** 	|
+| $3     	| `yes`, `no`              	| 用于是否启用[Log Checker](#log-checker-1)                          	|
 
 示例:
 
 ```sh
--e ENTRYPOINT_ARGS="native"
+-e ENTRYPOINT_ARGS="native no yes"
 ```
 
-使用linux平台，启动Log Checker
+使用linux平台，不启动UE4SS Log Clipper，启动Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="wine skip"
+-e ENTRYPOINT_ARGS="wine yes no"
 ```
 
-使用windows平台，跳过Log Checker
+使用windows平台，启动UE4SS Log Clipper，不启动Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="skip skip"
+-e ENTRYPOINT_ARGS="skip no no"
 ```
 
-跳过steamcmd，跳过Log Checker
+跳过steamcmd，不启动UE4SS Log Clipper，不启动Log Checker
+
+### UE4SS Log Clipper
+
+一个简单的脚本，会在每次服务器运行前复制`$UE4SS_LOG_SRC_PATH/UE4SS.log`到`$UE4SS_LOG_TO_PATH`
+
+日志的命名格式: `$(date +"%Y%m%dT%H%M%S%z").log`
 
 ### Log Checker
 
