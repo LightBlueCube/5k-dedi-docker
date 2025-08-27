@@ -103,43 +103,48 @@ You have to create a volume for stoagre your server files, mount it on `$SRVPATH
 
 ### Entrypoint Params
 
-| Params 	| Allowed value            	| Description                                                                   	|
-|--------	|--------------------------	|-------------------------------------------------------------------------------	|
-| $1     	| `native`, `wine`, `skip` 	| Used to set steamcmd's platform type, `skip` to skip the steamcmd             	|
-| $2     	| `yes`, `no`              	| Used to should start [UE4SS Log Clipper](#ue4ss-log-clipper), **Wine ONLY**   	|
-| $3     	| `yes`, `no`              	| Used to should start [Log Checker](#log-checker)                              	|
+| Params 	| Allowed value            	| Description                                                                 	|
+|--------	|--------------------------	|-----------------------------------------------------------------------------	|
+| $1     	| `native`, `wine`, `skip` 	| Used to set steamcmd's platform type, `skip` to skip the steamcmd           	|
+| $2     	| `yes`, `no`              	| Used to should start [UE4SS Log Clipper](#ue4ss-log-clipper), **Wine ONLY** 	|
+| $3     	| `yes`, `no`              	| Used to should [Reset Wine](#reset-wine) before starting, **Wine ONLY**     	|
+| $4     	| `yes`, `no`              	| Used to should start [Log Checker](#log-checker)                            	|
 
 Example:
 
 ```sh
--e ENTRYPOINT_ARGS="native no yes"
+-e ENTRYPOINT_ARGS="native no no yes"
 ```
 
-Use linux platform, not start UE4SS Log Clipper, start Log Checker
+Use linux platform, not start UE4SS Log Clipper, no Reset Wine, start Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="wine yes no"
+-e ENTRYPOINT_ARGS="wine yes yes yes"
 ```
 
-Use windows platform, start UE4SS Log Clipper, not start Log Checker
+Use windows platform, start UE4SS Log Clipper, Reset Wine, start Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="skip no no"
+-e ENTRYPOINT_ARGS="skip no no no"
 ```
 
-Skip steamcmd, not start UE4SS Log Clipper, not start Log Checker
+Skip steamcmd, not start UE4SS Log Clipper, no Reset Wine, not start Log Checker
 
 ### UE4SS Log Clipper
 
-A simple script will clip `$UE4SS_LOG_SRC_PATH/UE4SS.log` to `$UE4SS_LOG_TO_PATH` everytime before server start running
+A simple script will clip `$UE4SS_LOG_SRC_PATH/UE4SS.log` to `$UE4SS_LOG_TO_PATH` everytime before server starting
 
 The name format of the log: `$(date +"%Y%m%dT%H%M%S%z").log`
+
+### Reset Wine
+
+A simple script will `rm -rf /home/5k/.wine` everytime before server starting
 
 ### Log Checker
 
 A simple script will keep watching the stdout, and if it find any matched strings, it will kill the server
 
-Default matched strings: `FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `Error: SteamSockets API`
+Default matched strings: `FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `SteamSockets API: Error`
 
 You can modify it in `entrypoint.sh` > `$MATCH_TARGET`
 
@@ -251,27 +256,28 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 |--------	|--------------------------	|------------------------------------------------------------------	|
 | $1     	| `native`, `wine`, `skip` 	| 用于设置steamcmd的平台类型，`skip`为跳过steamcmd                     	|
 | $2     	| `yes`, `no`              	| 用于是否启用[UE4SS Log Clipper](#ue4ss-log-clipper-1)，**仅限Wine** 	|
-| $3     	| `yes`, `no`              	| 用于是否启用[Log Checker](#log-checker-1)                          	|
+| $3     	| `yes`, `no`              	| 用于是否[Reset Wine](#reset-wine-1)在服务器启动之前, **仅限Wine**       	|
+| $4     	| `yes`, `no`              	| 用于是否启用[Log Checker](#log-checker-1)                          	|
 
 示例:
 
 ```sh
--e ENTRYPOINT_ARGS="native no yes"
+-e ENTRYPOINT_ARGS="native no no yes"
 ```
 
-使用linux平台，不启动UE4SS Log Clipper，启动Log Checker
+使用linux平台，不启动UE4SS Log Clipper，不Reset Wine，启动Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="wine yes no"
+-e ENTRYPOINT_ARGS="wine yes yes yes"
 ```
 
-使用windows平台，启动UE4SS Log Clipper，不启动Log Checker
+使用windows平台，启动UE4SS Log Clipper，Reset Wine，启动Log Checker
 
 ```sh
--e ENTRYPOINT_ARGS="skip no no"
+-e ENTRYPOINT_ARGS="skip no no no"
 ```
 
-跳过steamcmd，不启动UE4SS Log Clipper，不启动Log Checker
+跳过steamcmd，不启动UE4SS Log Clipper，不Reset Wine，不启动Log Checker
 
 ### UE4SS Log Clipper
 
@@ -279,10 +285,14 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 
 日志的命名格式: `$(date +"%Y%m%dT%H%M%S%z").log`
 
+### Reset Wine
+
+一个简单的脚本，会在每次服务器运行前`rm -rf /home/5k/.wine`
+
 ### Log Checker
 
 一个简单的脚本，会持续监听标准输出(stdout)，如果发现匹配的字符串，就会杀掉服务器
 
-默认匹配字符串：`FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `Error: SteamSockets API`
+默认匹配字符串：`FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `SteamSockets API: Error`
 
 你可以在`entrypoint.sh` > `$MATCH_TARGET`修改

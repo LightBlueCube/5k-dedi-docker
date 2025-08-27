@@ -43,7 +43,7 @@ if [ "$2" = "yes" ]; then
 	cp "$UE4SS_LOG_SRC_PATH/UE4SS.log" "$UE4SS_LOG_TO_PATH/$(date +"%Y%m%dT%H%M%S%z").log"
 fi
 
-# Log Checker
+# Reset Wine
 
 if [ -z "${3-}" ]; then
 	echo "entrypoint.sh: require arguments \$3."
@@ -56,7 +56,25 @@ if [ "$3" != "yes" ] && [ "$3" != "no" ]; then
 	exit 1
 fi
 
-if [ "$3" = "no" ]; then
+if [ "$3" = "yes" ]; then
+	echo "entrypoint.sh: reseting wine!"
+	rm -rf /home/5k/.wine
+fi
+
+# Log Checker
+
+if [ -z "${4-}" ]; then
+	echo "entrypoint.sh: require arguments \$4."
+	exit 1
+fi
+
+
+if [ "$4" != "yes" ] && [ "$4" != "no" ]; then
+	echo "entrypoint.sh: invalid arguments \$4, use \"yes\" or \"no\"."
+	exit 1
+fi
+
+if [ "$4" = "no" ]; then
 	$STARTCMD $ARGS
 	exit
 fi
@@ -71,7 +89,7 @@ SRV_PID=$!
 SHELL_PID=$$
 
 MATCH_TARGET="FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0
-Error: SteamSockets API"
+SteamSockets API: Error"
 
 (while IFS= read -r line; do
 	printf '%s\n' "$line"
@@ -82,8 +100,10 @@ Error: SteamSockets API"
 		fi
 
 		echo "\n======== entrypoint.sh ========\nentrypoint.sh: detected \"$TARGET\", exiting!\n================================"
+		rm -f $pipe
 		kill "$SRV_PID"
 		kill "$SHELL_PID"
+		exit
 	done <<EOF
 $MATCH_TARGET
 EOF
@@ -91,4 +111,5 @@ EOF
 done < $pipe) &
 
 wait "$SRV_PID"
+rm -f $pipe
 kill "$SHELL_PID"
