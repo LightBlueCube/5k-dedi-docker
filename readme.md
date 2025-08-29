@@ -142,7 +142,7 @@ A simple script will `rm -rf /home/5k/.wine` everytime before server starting
 
 ### Log Checker
 
-A simple script will keep watching the stdout, and if it find any matched strings, it will kill the server
+A simple script will keep watching the stdout and stderr, and if it find any matched strings, it will kill the server
 
 Default matched strings: `FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `SteamSockets API: Error`
 
@@ -291,7 +291,7 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 
 ### Log Checker
 
-一个简单的脚本，会持续监听标准输出(stdout)，如果发现匹配的字符串，就会杀掉服务器
+一个简单的脚本，会持续监听标准输出(stdout)和标准错误(stderr)，如果发现匹配的字符串，就会杀掉服务器
 
 默认匹配字符串：`FOnlineAsyncTaskSteamCreateServer bWasSuccessful: 0`, `SteamSockets API: Error`
 

@@ -84,7 +84,7 @@ echo "entrypoint.sh: activate log checker!"
 
 pipe=$(mktemp -u)
 mkfifo $pipe
-$STARTCMD $ARGS > $pipe &
+$STARTCMD $ARGS > $pipe 2>&1 &
 SRV_PID=$!
 SHELL_PID=$$
 
@@ -94,12 +94,15 @@ SteamSockets API: Error"
 (while IFS= read -r line; do
 	printf '%s\n' "$line"
 
-	while IFS=$(printf '\n') read -r TARGET; do
-		if ! echo "$line" | grep -q "$TARGET"; then
+	while IFS=$(printf '\n') read -r target; do
+		if ! grep -Fq "$target" <<EOF
+$line
+EOF
+		then
 			continue
 		fi
 
-		echo "\n======== entrypoint.sh ========\nentrypoint.sh: detected \"$TARGET\", exiting!\n================================"
+		echo "\n======== entrypoint.sh ========\nentrypoint.sh: detected \"$target\", exiting!\n================================"
 		rm -f $pipe
 		kill "$SRV_PID"
 		kill "$SHELL_PID"
