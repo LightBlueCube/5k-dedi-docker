@@ -1,9 +1,10 @@
 FROM debian
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint_root.sh /usr/local/bin/entrypoint_root.sh
 
 RUN apt-get update && apt-get install -y lib32gcc-s1 curl && rm -rf /var/lib/apt/lists/* && apt-get clean && \
-	chmod +x /usr/local/bin/entrypoint.sh && useradd -m 5k
+	chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint_root.sh && useradd -m 5k
 
 ENV APPID=884110
 ENV STEAMPATH="/home/5k/Steam"
@@ -25,8 +26,9 @@ RUN dpkg --add-architecture i386 && \
 ENV STARTENV="WINEDLLOVERRIDES=dwmapi=native,builtin"
 ENV STARTCMD="wine ./WindowsServer/PandemicServer.exe"
 ENV ENTRYPOINT_ARGS="wine no no"
+ENV ENTRYPOINT_ROOT_ARGS="yes"
 
 ENV UE4SS_LOG_SRC_PATH="${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"
 ENV UE4SS_LOG_TO_PATH="${UE4SS_LOG_SRC_PATH}/logs"
 
-CMD chown -R 5k:5k "$SRVPATH" && su 5k -c "entrypoint.sh $ENTRYPOINT_ARGS"
+CMD ["sh", "-c", "entrypoint_root.sh $ENTRYPOINT_ROOT_ARGS"]
