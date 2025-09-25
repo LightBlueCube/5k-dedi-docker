@@ -25,7 +25,7 @@ RUN dpkg --add-architecture i386 && \
 
 ENV STARTENV="WINEDLLOVERRIDES=dwmapi=native,builtin"
 ENV STARTCMD="wine ./WindowsServer/PandemicServer.exe"
-ENV ENTRYPOINT_ARGS="wine no no"
+ENV ENTRYPOINT_ARGS="wine no no no"
 ENV ENTRYPOINT_ROOT_ARGS="yes"
 
 ENV UE4SS_LOG_SRC_PATH="${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"

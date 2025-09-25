@@ -17,7 +17,7 @@ RUN mkdir -p "$STEAMPATH" "$SRVPATH" && cd "$STEAMPATH" && \
 
 ENV STARTENV=""
 ENV STARTCMD="./LinuxServer/PandemicServer.sh"
-ENV ENTRYPOINT_ARGS="native no no"
+ENV ENTRYPOINT_ARGS="native no no no"
 ENV ENTRYPOINT_ROOT_ARGS="yes"
 
 USER root

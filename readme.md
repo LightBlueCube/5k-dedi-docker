@@ -99,7 +99,7 @@ You have to create a volume for storage your server files, mount it on `$SRVPATH
 | ARGS                 	| `""`                                                                                              	| The params you want sent to the server                                                	|
 | STARTENV             	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| Start environments, **modify `WINEDLLOVERRIDES` may result in `UE4SS` not loading**   	|
 | STARTCMD             	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| Start command, used to start the server, a modify example: `"wine ./StartServer.bat"` 	|
-| ENTRYPOINT_ARGS      	| Native: `"native no no"`<br/>Wine: `"wine no no"`                                                 	| Params for entrypoint.sh, see [Entrypoint Params](#entrypoint-params)                 	|
+| ENTRYPOINT_ARGS      	| Native: `"native no no no"`<br/>Wine: `"wine no no no"`                                           	| Params for entrypoint.sh, see [Entrypoint Params](#entrypoint-params)                 	|
 | ENTRYPOINT_ROOT_ARGS 	| `"yes"`                                                                                           	| Params for entrypoint_root.sh, see [Entrypoint Params](#entrypoint-params)            	|
 | UE4SS_LOG_SRC_PATH   	| Native: undefined<br/>Wine: `"${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"`            	| Used by [UE4SS Log Clipper](#ue4ss-log-clipper)                                       	|
 | UE4SS_LOG_TO_PATH    	| Native: undefined<br/>Wine: `"${UE4SS_LOG_SRC_PATH}/logs"`                                        	| Used by [UE4SS Log Clipper](#ue4ss-log-clipper)                                       	|
@@ -289,7 +289,7 @@ docker run --name scp5kserver -p 7777:7777/tcp -p 7777:7777/udp -p 27015:27015/t
 | ARGS               	| `""`                                                                                              	| 你想发给服务器的参数                                                      	|
 | STARTENV           	| Native: `""`<br/>Wine: `"WINEDLLOVERRIDES=dwmapi=native,builtin"`                                 	| 环境变量，**修改`WINEDLLOVERRIDES`可能会导致`UE4SS`不加载**                	|
 | STARTCMD           	| Native: `"./LinuxServer/PandemicServer.sh"`<br/>Wine: `"wine ./WindowsServer/PandemicServer.exe"` 	| 用于启动服务器的指令，修改例： `"wine ./StartServer.bat"`                  	|
-| ENTRYPOINT_ARGS    	| Native: `"native no no"`<br/>Wine: `"wine no no"`                                                 	| entrypoint.sh的参数，详见[Entrypoint Params](#entrypoint-params-1)      	|
+| ENTRYPOINT_ARGS    	| Native: `"native no no no"`<br/>Wine: `"wine no no no"`                                           	| entrypoint.sh的参数，详见[Entrypoint Params](#entrypoint-params-1)      	|
 | ENTRYPOINT_ROOT_ARGS 	| `"yes"`                                                                                           	| entrypoint_root.sh的参数，详见[Entrypoint Params](#entrypoint-params-1) 	|
 | UE4SS_LOG_SRC_PATH 	| Native: undefined<br/>Wine: `"${SRVPATH}/WindowsServer/Pandemic/Binaries/Win64/ue4ss"`            	| 被用于 [UE4SS Log Clipper](#ue4ss-log-clipper-1)                       	|
 | UE4SS_LOG_TO_PATH  	| Native: undefined<br/>Wine: `"${UE4SS_LOG_SRC_PATH}/logs"`                                        	| 被用于 [UE4SS Log Clipper](#ue4ss-log-clipper-1)                       	|
